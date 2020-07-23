@@ -169,12 +169,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="KeyBoardBehaviour.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Behaviour.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="KeyBoardBehaviour.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
