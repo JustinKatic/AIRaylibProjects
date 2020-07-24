@@ -10,6 +10,7 @@ public:
 	virtual ~Behaviour();
 
 	virtual void Update(GameObject* obj, float deltaTime);
+	virtual void Draw(GameObject* obj);
 
 protected:
 

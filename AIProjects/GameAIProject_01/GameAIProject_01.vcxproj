@@ -173,12 +173,18 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="KeyBoardBehaviour.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PathBehaviour.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SeekBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="KeyBoardBehaviour.h" />
+    <ClInclude Include="PathBehaviour.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="SeekBehaviour.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

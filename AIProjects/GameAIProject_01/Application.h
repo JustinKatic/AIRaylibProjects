@@ -19,7 +19,6 @@ public:
 
 private:
 	GameObject* m_player1 = nullptr;
-	GameObject* m_player2 = nullptr;
 	int m_windowWidth;
 	int m_windowHeight;
 
