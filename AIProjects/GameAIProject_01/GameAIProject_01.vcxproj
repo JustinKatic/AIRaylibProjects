@@ -170,21 +170,29 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Behaviour.cpp" />
+    <ClCompile Include="FleeBehaviour.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="Graph2D.cpp" />
+    <ClCompile Include="Graph2DEditor.cpp" />
     <ClCompile Include="KeyBoardBehaviour.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PathBehaviour.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SeekBehaviour.cpp" />
+    <ClCompile Include="WanderBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="FleeBehaviour.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="Graph2D.h" />
+    <ClInclude Include="Graph2DEditor.h" />
     <ClInclude Include="KeyBoardBehaviour.h" />
-    <ClInclude Include="PathBehaviour.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SeekBehaviour.h" />
+    <ClInclude Include="WanderBehaviour.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
