@@ -1,5 +1,7 @@
 #include "WanderBehaviour.h"
 #include"GameObject.h"
+#include <time.h>
+#include <iostream>
 
 WanderBehaviour::WanderBehaviour()
 {
@@ -13,25 +15,26 @@ WanderBehaviour::~WanderBehaviour()
 
 void WanderBehaviour::Update(GameObject* obj, float deltaTime)
 {
-	float distToTarget = Vector2Distance(obj->GetPosition(), m_target);
-	if (distToTarget < m_targetRadius)
+	float rAngle = (float)(rand() % 360) * 0.0174f;
+	//float radius = GetTargetRadius();
+
+	Vector2 defaultVelocity = { 100.0f, 100.0f };
+
+	if (obj->GetVelocity().x == 0.0f && obj->GetVelocity().y == 0.0f)
 	{
-		if (m_onArriveFn)
-		{
-			m_onArriveFn();
-		}
+		obj->SetVelocity(defaultVelocity);
 	}
 
-	Vector2 heading = Vector2Add(obj->GetPosition(), obj->GetVelocity());
-	float headingLen = Vector2Length(heading);
+	Vector2 circleCentre = Vector2Add(Vector2Scale(Vector2Normalize(obj->GetVelocity()), 200.0f), obj->GetPosition());
 
-	Vector2 dirToTarget = Vector2Normalize(Vector2Subtract(m_target, obj->GetPosition()));
-	Vector2 vecToTarget = Vector2Scale(dirToTarget, headingLen);
+	m_target.x = GetTargetRadius() * cosf(rAngle) + circleCentre.x;
+	m_target.y = -GetTargetRadius() * sinf(rAngle) + circleCentre.y;
 
-	Vector2 targetForcePos = Vector2Add(vecToTarget, obj->GetPosition());
-	Vector2 forceDir = Vector2Subtract(targetForcePos, heading);
+	Vector2 forceDir = Vector2Subtract(m_target, circleCentre);
 
 	obj->ApplyForce(forceDir);
+
+
 }
 
 void WanderBehaviour::Draw(GameObject* obj)
@@ -61,7 +64,4 @@ void WanderBehaviour::SetTargetRadius(const float& radius)
 	m_targetRadius = radius;
 }
 
-void WanderBehaviour::OnArrive(std::function<void()> callback)
-{
-	m_onArriveFn = callback;
-}
+

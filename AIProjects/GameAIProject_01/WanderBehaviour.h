@@ -20,15 +20,13 @@ public:
 
 	void SetTarget(const Vector2& target);
 	void SetTargetRadius(const float& radius);
-	
 
-	void OnArrive(std::function<void()> callback);
 
 protected:
+
 	Vector2 m_target;
 	float m_targetRadius = 1.0f;
 
-	std::function<void()> m_onArriveFn;
 
 private:
 

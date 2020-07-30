@@ -13,7 +13,7 @@ Graph2DEditor::~Graph2DEditor()
 
 void Graph2DEditor::Update(float deltaTime)
 {
-	if (IsMouseButtonPressed(0))
+	if (IsKeyPressed(KEY_N))
 	{
 		auto mousePos = GetMousePosition();
 

@@ -3,12 +3,12 @@
 #include"SeekBehaviour.h"
 #include"FleeBehaviour.h"
 #include"WanderBehaviour.h"
+#include<random>
 #include<iostream>
 
 Player::Player()
 {
 	m_kbBehaviour = new KeyBoardBehaviour();
-	
 
 	m_seekBehaviour = new SeekBehaviour();
 	m_seekBehaviour->SetTargetRadius(25);
@@ -23,14 +23,9 @@ Player::Player()
 	m_fleeBehaviour->SetTargetRadius(100);
 
 	m_wanderBehaviour = new WanderBehaviour();
-	m_wanderBehaviour->OnArrive([this]()
-		{
-			SetBehaviour(m_wanderBehaviour);
-		});
+	m_wanderBehaviour->SetTargetRadius(200);
 
 	SetBehaviour(m_kbBehaviour);
-
-
 
 }
 
@@ -40,11 +35,12 @@ Player::~Player()
 	delete m_kbBehaviour;
 	delete m_seekBehaviour;
 	delete m_fleeBehaviour;
+	delete m_wanderBehaviour;
 }
 
 void Player::Update(float deltaTime)
 {
-	if (IsKeyDown(KEY_S))
+	if (IsMouseButtonDown(0))
 	{
 		m_seekBehaviour->SetTarget(GetMousePosition());
 		SetBehaviour(m_seekBehaviour);
@@ -58,9 +54,9 @@ void Player::Update(float deltaTime)
 		m_fleeBehaviour->SetTarget(GetMousePosition());
 		SetBehaviour(m_fleeBehaviour);	
 	}
-	if (IsKeyDown(KEY_W))
+	if (IsMouseButtonDown(1))
 	{
-		m_wanderBehaviour->SetTarget({/*add vector 2 of where target needs to move to*/});
+		m_wanderBehaviour->SetTarget({ 300 ,300 });
 		SetBehaviour(m_wanderBehaviour);
 	}
 	GameObject::Update(deltaTime);

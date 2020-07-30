@@ -32,6 +32,8 @@ protected:
     float m_friction = 0.0f;
     Behaviour* m_behaviour;
 
+    Vector2 m_direction;
+
 
 
 
