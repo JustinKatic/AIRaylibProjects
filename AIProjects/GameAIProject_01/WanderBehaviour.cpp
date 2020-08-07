@@ -15,32 +15,50 @@ WanderBehaviour::~WanderBehaviour()
 
 void WanderBehaviour::Update(GameObject* obj, float deltaTime)
 {
-	float rAngle = (float)(rand() % 360) * 0.0174f;
-	//float radius = GetTargetRadius();
+	obj->SetFriction(1);
 
-	Vector2 defaultVelocity = { 100.0f, 100.0f };
-
-	if (obj->GetVelocity().x == 0.0f && obj->GetVelocity().y == 0.0f)
+	m_time += deltaTime;
+	if (m_time > 0.1)
 	{
-		obj->SetVelocity(defaultVelocity);
+
+		if (obj->GetPosition().x < 20 || obj->GetPosition().x > GetScreenWidth() - 20 || obj->GetPosition().y < 20 || obj->GetPosition().y > GetScreenHeight() -20)
+		{
+			Vector2 newVelocity;
+			newVelocity.x = GetScreenWidth() * 0.5f - obj->GetPosition().x;
+			newVelocity.y = GetScreenHeight() * 0.5f - obj->GetPosition().y;
+
+			newVelocity = Vector2Normalize(newVelocity);
+			newVelocity = Vector2Scale(newVelocity, 20);
+
+			obj->SetVelocity(newVelocity);
+
+
+		}
+		else
+		{
+			Vector2 defVelocity = { 100.0f, 100.0f };
+			if (obj->GetVelocity().x == 0.0f && obj->GetVelocity().y == 0.0f)
+			{
+				obj->SetVelocity(defVelocity);
+			}
+			float theta = atan2(obj->GetVelocity().x, obj->GetVelocity().y);
+			theta = theta * 57.2958;
+			float radius = m_defaultSpeed;
+			float finalTheta = (theta - m_offset) + rand() % (2 * m_offset);
+			finalTheta = finalTheta * 0.01745;
+			Vector2 newVelocity;
+			newVelocity.x = radius * sinf(finalTheta);
+			newVelocity.y = radius * cosf(finalTheta);
+			obj->SetVelocity(newVelocity);
+			m_time = 0;
+		}
 	}
-
-	Vector2 circleCentre = Vector2Add(Vector2Scale(Vector2Normalize(obj->GetVelocity()), 200.0f), obj->GetPosition());
-
-	m_target.x = GetTargetRadius() * cosf(rAngle) + circleCentre.x;
-	m_target.y = -GetTargetRadius() * sinf(rAngle) + circleCentre.y;
-
-	Vector2 forceDir = Vector2Subtract(m_target, circleCentre);
-
-	obj->ApplyForce(forceDir);
-
 
 }
 
 void WanderBehaviour::Draw(GameObject* obj)
 {
-	DrawCircle(m_target.x, m_target.y, m_targetRadius, LIGHTGRAY);
-	DrawCircle(m_target.x, m_target.y, 4, GRAY);
+
 }
 
 const Vector2& WanderBehaviour::GetTarget() const

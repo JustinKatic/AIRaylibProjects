@@ -27,9 +27,9 @@ void GameObject::Draw()
 	m_behaviour->Draw(this);
 	// Debug Draw
 	Vector2 targetHeading = Vector2Add(m_position, m_velocity);
-	DrawCircle(m_position.x, m_position.y, 8, GRAY);
+	DrawCircle(m_position.x, m_position.y, 8, GREEN);
 	DrawLine(m_position.x, m_position.y,
-		targetHeading.x, targetHeading.y, DARKGRAY);
+		targetHeading.x, targetHeading.y, RED);
 }
 void GameObject::ApplyForce(const Vector2& force)
 {

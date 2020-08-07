@@ -26,6 +26,9 @@ protected:
 
 	Vector2 m_target;
 	float m_targetRadius = 1.0f;
+	float m_time = 0;
+	float m_defaultSpeed = 100;
+	int m_offset = 40;
 
 
 private:

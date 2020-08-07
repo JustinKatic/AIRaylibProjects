@@ -41,10 +41,10 @@ void Application::Load()
 	//===============================================================================================================
 	m_graph = new Graph2D();
 
-	int numRows = 4;
-	int numCols = 6;
-	float xOffset = 100;
-	float yOffset = 100;
+	int numRows = 19;
+	int numCols = 27;
+	float xOffset = 50;
+	float yOffset = 50;
 	float spacing = 50;
 	
 	for (int y = 0; y < numRows; y++)
@@ -61,7 +61,7 @@ void Application::Load()
 	for (auto node : m_graph->GetNodes())
 	{
 		std::vector<Graph2D::Node*> nearbyNodes;
-		m_graph->GetNearbyNodes(node->data, 60, nearbyNodes);
+		m_graph->GetNearbyNodes(node->data, 80, nearbyNodes);
 
 		for (auto connectedNode : nearbyNodes)
 		{
@@ -107,17 +107,17 @@ void Application::Update(float dt)
 void Application::Draw()
 {
 	BeginDrawing();
-	ClearBackground(RAYWHITE);
+	ClearBackground(BLACK);
 	//===============================================================================================================
 	m_graphEditor->Draw();
 	//===============================================================================================================
 	m_player1->Draw();
+	//===============================================================================================================
 	EndDrawing();
 }
 
 
 //TODO: 
-// fix hard coded 60 value representing radius of nearby nodes to connect
 // add variables to customise the graphs2dEditors
 //- node colour
 //- line colour

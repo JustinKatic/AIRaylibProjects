@@ -51,8 +51,8 @@ int main(int argc, char* argv[])
 {
     srand(time(NULL));
 	{
-       // TestGraph();
-		Application app(800, 540);
+      //  TestGraph();
+		Application app(1420, 980);
 		app.Run();
 	}
 

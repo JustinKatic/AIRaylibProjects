@@ -10,6 +10,7 @@ public:
 	struct Node;
 	struct Edge;
 
+
 	struct Node
 	{
 		TNodeData data;
@@ -58,7 +59,6 @@ public:
 	//========================================================================================
 	void AddEdge(Node* nodeA, Node* nodeB, const TEdgeData& data)
 	{
-		Edge e = { nodeB,data };
 		nodeA->connections.push_back({ nodeB,data });
 	}
 	//========================================================================================
@@ -69,6 +69,10 @@ public:
 		return m_nodes;
 	}
 
+
+	//========================================================================================
+	//BFS
+	//========================================================================================
 	Node* ForEachBFS(Node* startNode, std::function<bool(Node* n)> process)
 	{
 		std::vector<Node*> stack;
@@ -78,6 +82,7 @@ public:
 		{
 			startNode = m_nodes[0];
 		}
+
 		stack.push_back(startNode);
 
 		while (stack.empty() == false)
@@ -102,7 +107,9 @@ public:
 		return nullptr;
 	}
 
-
+	//========================================================================================
+	//DFS
+	//========================================================================================
 	Node* ForEachDFS(Node* startNode, std::function<bool(Node* n)> process)
 	{
 		std::vector<Node*> stack;

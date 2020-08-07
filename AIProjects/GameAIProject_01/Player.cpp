@@ -23,7 +23,7 @@ Player::Player()
 	m_fleeBehaviour->SetTargetRadius(100);
 
 	m_wanderBehaviour = new WanderBehaviour();
-	m_wanderBehaviour->SetTargetRadius(200);
+	m_wanderBehaviour->SetTargetRadius(50);
 
 	SetBehaviour(m_kbBehaviour);
 
@@ -40,7 +40,7 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
-	if (IsMouseButtonDown(0))
+	if (IsKeyDown(KEY_ONE))
 	{
 		m_seekBehaviour->SetTarget(GetMousePosition());
 		SetBehaviour(m_seekBehaviour);
@@ -49,12 +49,12 @@ void Player::Update(float deltaTime)
 	{
 		SetBehaviour(m_kbBehaviour);
 	}
-	if (IsKeyDown(KEY_F))
+	if (IsKeyDown(KEY_TWO))
 	{
 		m_fleeBehaviour->SetTarget(GetMousePosition());
 		SetBehaviour(m_fleeBehaviour);	
 	}
-	if (IsMouseButtonDown(1))
+	if (IsKeyDown(KEY_THREE))
 	{
 		m_wanderBehaviour->SetTarget({ 300 ,300 });
 		SetBehaviour(m_wanderBehaviour);

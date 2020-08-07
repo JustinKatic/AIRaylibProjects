@@ -14,7 +14,6 @@ SeekBehaviour::~SeekBehaviour()
 
 void SeekBehaviour::Update(GameObject* obj, float deltaTime)
 {
-
 	float distToTarget = Vector2Distance(obj->GetPosition(), m_target);
 	if (distToTarget < m_targetRadius)
 	{
@@ -25,7 +24,7 @@ void SeekBehaviour::Update(GameObject* obj, float deltaTime)
 	}
 
 	Vector2 heading = Vector2Add(obj->GetPosition(), obj->GetVelocity());
-	float headingLen = Vector2Length(heading);
+	float headingLen = 400;
 
 	Vector2 dirToTarget = Vector2Normalize(Vector2Subtract(m_target, obj->GetPosition()));
 	Vector2 vecToTarget = Vector2Scale(dirToTarget, headingLen);
@@ -38,8 +37,8 @@ void SeekBehaviour::Update(GameObject* obj, float deltaTime)
 
 void SeekBehaviour::Draw(GameObject* obj)
 {
-	DrawCircle(m_target.x, m_target.y, m_targetRadius, LIGHTGRAY);
-	DrawCircle(m_target.x, m_target.y, 4, GRAY);
+	DrawCircle(m_target.x, m_target.y, m_targetRadius, RED);
+	DrawCircle(m_target.x, m_target.y, 4, WHITE);
 }
 
 const Vector2& SeekBehaviour::GetTarget() const
