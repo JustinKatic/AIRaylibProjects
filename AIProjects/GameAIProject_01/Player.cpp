@@ -3,6 +3,8 @@
 #include"SeekBehaviour.h"
 #include"FleeBehaviour.h"
 #include"WanderBehaviour.h"
+#include"PathFindingBehaviour.h"
+#include"Graph2DEditor.h"
 #include<random>
 #include<iostream>
 
@@ -18,12 +20,18 @@ Player::Player()
 			SetBehaviour(m_kbBehaviour);
 		});
 
-
+	
 	m_fleeBehaviour = new FleeBehaviour();
 	m_fleeBehaviour->SetTargetRadius(100);
 
 	m_wanderBehaviour = new WanderBehaviour();
-	m_wanderBehaviour->SetTargetRadius(50);
+
+	m_pathFindingBehaviour = new PathFindingBehaviour();
+	m_pathFindingBehaviour->SetTargetRadius(15);
+	m_pathFindingBehaviour->OnArrive([this]()
+		{
+			SetBehaviour(m_pathFindingBehaviour);
+		});
 
 	SetBehaviour(m_kbBehaviour);
 
@@ -52,12 +60,17 @@ void Player::Update(float deltaTime)
 	if (IsKeyDown(KEY_TWO))
 	{
 		m_fleeBehaviour->SetTarget(GetMousePosition());
-		SetBehaviour(m_fleeBehaviour);	
+		SetBehaviour(m_fleeBehaviour);
 	}
 	if (IsKeyDown(KEY_THREE))
 	{
-		m_wanderBehaviour->SetTarget({ 300 ,300 });
 		SetBehaviour(m_wanderBehaviour);
+	}
+	if (m_graph2DEditor && !m_graph2DEditor->m_path.empty() && IsKeyDown(KEY_FOUR))
+	{
+		//m_pathFindingBehaviour->SetTarget();
+		m_pathFindingBehaviour->AddPath(m_graph2DEditor->m_path);
+		SetBehaviour(m_pathFindingBehaviour);
 	}
 	GameObject::Update(deltaTime);
 }

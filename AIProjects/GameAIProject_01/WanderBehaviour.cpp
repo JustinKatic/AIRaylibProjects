@@ -20,19 +20,16 @@ void WanderBehaviour::Update(GameObject* obj, float deltaTime)
 	m_time += deltaTime;
 	if (m_time > 0.1)
 	{
-
-		if (obj->GetPosition().x < 20 || obj->GetPosition().x > GetScreenWidth() - 20 || obj->GetPosition().y < 20 || obj->GetPosition().y > GetScreenHeight() -20)
+		if (obj->GetPosition().x < 40 || obj->GetPosition().x > GetScreenWidth() - 40 || obj->GetPosition().y < 40 || obj->GetPosition().y > GetScreenHeight() -40)
 		{
 			Vector2 newVelocity;
 			newVelocity.x = GetScreenWidth() * 0.5f - obj->GetPosition().x;
 			newVelocity.y = GetScreenHeight() * 0.5f - obj->GetPosition().y;
 
 			newVelocity = Vector2Normalize(newVelocity);
-			newVelocity = Vector2Scale(newVelocity, 20);
+			newVelocity = Vector2Scale(newVelocity, 100);
 
 			obj->SetVelocity(newVelocity);
-
-
 		}
 		else
 		{
@@ -53,7 +50,6 @@ void WanderBehaviour::Update(GameObject* obj, float deltaTime)
 			m_time = 0;
 		}
 	}
-
 }
 
 void WanderBehaviour::Draw(GameObject* obj)
@@ -61,25 +57,25 @@ void WanderBehaviour::Draw(GameObject* obj)
 
 }
 
-const Vector2& WanderBehaviour::GetTarget() const
-{
-	return m_target;
-}
+//const Vector2& WanderBehaviour::GetTarget() const
+//{
+//	return m_target;
+//}
 
-const float& WanderBehaviour::GetTargetRadius() const
-{
-	return m_targetRadius;
-}
+//const float& WanderBehaviour::GetTargetRadius() const
+//{
+//	return m_targetRadius;
+//}
 
 
-void WanderBehaviour::SetTarget(const Vector2& target)
-{
-	m_target = target;
-}
+//void WanderBehaviour::SetTarget(const Vector2& target)
+//{
+//	m_target = target;
+//}
 
-void WanderBehaviour::SetTargetRadius(const float& radius)
-{
-	m_targetRadius = radius;
-}
+//void WanderBehaviour::SetTargetRadius(const float& radius)
+//{
+//	m_targetRadius = radius;
+//}
 
 

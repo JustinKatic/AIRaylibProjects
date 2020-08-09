@@ -15,13 +15,6 @@ public:
 	virtual void Draw(GameObject* obj);
 
 
-	const Vector2& GetTarget() const;
-	const float& GetTargetRadius() const;
-
-	void SetTarget(const Vector2& target);
-	void SetTargetRadius(const float& radius);
-
-
 protected:
 
 	Vector2 m_target;

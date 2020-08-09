@@ -81,7 +81,7 @@ void Graph2DEditor::Update(float deltaTime)
 
 				std::list<Graph2D::Node*> path; // stores the path
 
-				if (m_graph->FindPath(m_startNode, isGoalNode, path))
+				if (m_graph->FindPath(m_startNode, isGoalNode, path) == true)
 				{
 					//populate the std::vector<Vetor2> path with our path data.
 					m_path.clear();
@@ -168,3 +168,4 @@ void Graph2DEditor::SetConnectionRadius(float radius)
 {
 	m_connectionRadius = radius;
 }
+

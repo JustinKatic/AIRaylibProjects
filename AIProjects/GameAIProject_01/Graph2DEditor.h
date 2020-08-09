@@ -19,6 +19,10 @@ public:
 	const float GetConnectionRadius() const;
 	void SetConnectionRadius(float radius);
 
+	std::vector<Vector2> m_path;
+
+
+
 protected:
 	Graph2D* m_graph;
 
@@ -28,7 +32,6 @@ protected:
 	float m_connectionRadius = 60.0f;
 	bool m_endNodeFound = false;
 
-	std::vector<Vector2> m_path;
 
 private:
 

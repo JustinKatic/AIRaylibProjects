@@ -172,11 +172,12 @@
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="FleeBehaviour.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Graph2D.cpp" />
     <ClCompile Include="Graph2DEditor.cpp" />
     <ClCompile Include="KeyBoardBehaviour.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="PathFindingBehaviour.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SeekBehaviour.cpp" />
     <ClCompile Include="WanderBehaviour.cpp" />
@@ -190,6 +191,8 @@
     <ClInclude Include="Graph2D.h" />
     <ClInclude Include="Graph2DEditor.h" />
     <ClInclude Include="KeyBoardBehaviour.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="PathFindingBehaviour.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SeekBehaviour.h" />
     <ClInclude Include="WanderBehaviour.h" />
