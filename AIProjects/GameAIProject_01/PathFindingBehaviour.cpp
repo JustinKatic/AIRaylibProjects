@@ -1,8 +1,6 @@
 #include "PathFindingBehaviour.h"
 #include "GameObject.h"
 #include "Graph2DEditor.h"
-
-
 #include <iostream>
 
 PathFindingBehaviour::PathFindingBehaviour()
@@ -17,7 +15,7 @@ PathFindingBehaviour::~PathFindingBehaviour()
 
 void PathFindingBehaviour::Update(GameObject* obj, float deltaTime)
 {
-	
+
 
 	if (pathAdded == false || m_targetNodes.empty() == true)
 	{
@@ -27,8 +25,7 @@ void PathFindingBehaviour::Update(GameObject* obj, float deltaTime)
 	float distToTarget = Vector2Distance(obj->GetPosition(), m_targetNodes[0]);
 	if (distToTarget < m_targetRadius)
 	{
-		
-			m_targetNodes.erase(m_targetNodes.begin());
+		m_targetNodes.erase(m_targetNodes.begin());
 
 		if (m_onArriveFn)
 		{
@@ -38,7 +35,7 @@ void PathFindingBehaviour::Update(GameObject* obj, float deltaTime)
 	if (m_targetNodes.empty() == false)
 	{
 		Vector2 heading = Vector2Add(obj->GetPosition(), obj->GetVelocity());
-		float headingLen = 400;
+		float headingLen = 200;
 
 		Vector2 dirToTarget = Vector2Normalize(Vector2Subtract(m_targetNodes[0], obj->GetPosition()));
 		Vector2 vecToTarget = Vector2Scale(dirToTarget, headingLen);
@@ -52,11 +49,11 @@ void PathFindingBehaviour::Update(GameObject* obj, float deltaTime)
 
 void PathFindingBehaviour::Draw(GameObject* obj)
 {
-	if (m_targetNodes.empty() == false)
-	{
-		DrawCircle(m_targetNodes[0].x, m_targetNodes[0].y, m_targetRadius, RED);
-		DrawCircle(m_targetNodes[0].x, m_targetNodes[0].y, 4, WHITE);
-	}
+		if (m_targetNodes.empty() == false && IsKeyDown(KEY_FIVE))		
+		{
+			DrawCircle(m_targetNodes[0].x, m_targetNodes[0].y, m_targetRadius, RED);
+			DrawCircle(m_targetNodes[0].x, m_targetNodes[0].y, 4, WHITE);
+		}
 }
 
 const Vector2& PathFindingBehaviour::GetTarget() const

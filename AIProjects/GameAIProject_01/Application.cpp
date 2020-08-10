@@ -5,15 +5,15 @@
 #include "Player.h"
 #include "Graph2D.h"
 #include "Graph2DEditor.h"
+#include "RedGhost.h"
 
 
 Application::Application()
 {
-	m_screenWidth = MAP_COLS * 30;
-	m_screenHeight = MAP_ROWS * 30;
+	m_screenWidth = MAP_COLS * 33;
+	m_screenHeight = MAP_ROWS * 33;
 	m_tileWidth = m_screenWidth / MAP_COLS;
 	m_tileHeight = m_screenHeight / MAP_ROWS;
-
 }
 Application::~Application()
 {
@@ -43,45 +43,6 @@ void Application::Load()
 {
 	//===============================================================================================================
 
-
-	//int numRows = 19;
-	//int numCols = 27;
-	//float xOffset = 50;
-	//float yOffset = 50;
-	//float spacing = 50;
-	//
-	//for (int y = 0; y < numRows; y++)
-	//{
-	//	for (int x = 0; x < numCols; x++)
-	//	{
-	//		m_graph->AddNode({
-	//			x * spacing + xOffset,
-	//			y * spacing + yOffset
-	//			});
-	//	}
-	//}
-
-	//for (auto node : m_graph->GetNodes())
-	//{
-	//	std::vector<Graph2D::Node*> nearbyNodes;
-	//	m_graph->GetNearbyNodes(node->data, 80, nearbyNodes);
-
-	//	for (auto connectedNode : nearbyNodes)
-	//	{
-	//		if (connectedNode == node)
-	//		{
-	//			continue;
-	//		}
-	//			float dist = Vector2Distance(node->data, connectedNode->data);
-	//			m_graph->AddEdge(node, connectedNode, dist);
-	//			m_graph->AddEdge(connectedNode, node, dist);	
-	//	}
-	//}
-
-	//===============================================================================================================
-
-
-
 	m_graph = new Graph2D();
 	m_graphEditor = new Graph2DEditor();
 	m_graphEditor->SetGraph(m_graph);
@@ -89,9 +50,13 @@ void Application::Load()
 
 	auto player = new Player();
 	player->SetFriction(1.0f);
-	//player->SetPosition({ m_screenWidth * 0.25f, m_windowHeight * 0.5f });
-	player->SetEditor(m_graphEditor);
 	m_player1 = player;
+
+	auto redGhost = new RedGhost();
+	redGhost->SetFriction(1.0f);
+	redGhost->SetEditor(m_graphEditor);
+	m_redGhost = redGhost;
+
 
 
 	for (int y = 0; y < MAP_ROWS; y++)
@@ -104,16 +69,46 @@ void Application::Load()
 
 			if (tileID == START)
 			{
-				player->SetPosition({(float)xPos + m_tileWidth /2,(float)yPos + m_tileHeight /2});
+				player->SetPosition({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
+			}
+			if (tileID == FOOD || tileID == START || tileID == POWERUP || tileID == REDGHOST || tileID == BLUEGHOST)
+			{
+				m_graph->AddNode({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
+			}
+			if (tileID == REDGHOST)
+			{
+				redGhost->SetPosition({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
+			}
+		}
+
+		for (auto node : m_graph->GetNodes())
+		{
+			std::vector<Graph2D::Node*> nearbyNodes;
+			m_graph->GetNearbyNodes(node->data, 50, nearbyNodes);
+
+			for (auto connectedNode : nearbyNodes)
+			{
+				if (connectedNode == node)
+				{
+					continue;
+				}
+				float dist = Vector2Distance(node->data, connectedNode->data);
+				m_graph->AddEdge(node, connectedNode, dist);
+				m_graph->AddEdge(connectedNode, node, dist);
 			}
 		}
 	}
-
 }
+	
+
+
 void Application::Unload()
 {
 	delete m_player1;
 	m_player1 = nullptr;
+
+	delete m_redGhost;
+	m_redGhost = nullptr;
 
 	//===============================================================================================================
 	delete m_graphEditor;
@@ -125,6 +120,8 @@ void Application::Unload()
 void Application::Update(float dt)
 {
 	m_player1->Update(dt);
+	//===============================================================================================================
+	m_redGhost->Update(dt);
 	//===============================================================================================================
 	m_graphEditor->Update(dt);
 	//===============================================================================================================
@@ -149,7 +146,7 @@ void Application::Draw()
 			}
 			if (tileID == FOOD)
 			{
-				DrawCircle(xPos + m_tileWidth/2, yPos + m_tileHeight /2, 5, YELLOW);
+				DrawCircle(xPos + m_tileWidth / 2, yPos + m_tileHeight / 2, 5, YELLOW);
 			}
 			if (tileID == POWERUP)
 			{
@@ -160,6 +157,8 @@ void Application::Draw()
 	}
 	//===============================================================================================================
 	m_graphEditor->Draw();
+	//===============================================================================================================
+	m_redGhost->Draw();
 	//===============================================================================================================
 	m_player1->Draw();
 	//===============================================================================================================

@@ -28,10 +28,6 @@ Player::Player()
 
 	m_pathFindingBehaviour = new PathFindingBehaviour();
 	m_pathFindingBehaviour->SetTargetRadius(15);
-	m_pathFindingBehaviour->OnArrive([this]()
-		{
-			SetBehaviour(m_pathFindingBehaviour);
-		});
 
 	SetBehaviour(m_kbBehaviour);
 
@@ -44,6 +40,7 @@ Player::~Player()
 	delete m_seekBehaviour;
 	delete m_fleeBehaviour;
 	delete m_wanderBehaviour;
+	delete m_pathFindingBehaviour;
 }
 
 void Player::Update(float deltaTime)
@@ -77,5 +74,8 @@ void Player::Update(float deltaTime)
 
 void Player::Draw()
 {
-	GameObject::Draw();
+	Vector2 targetHeading = Vector2Add(m_position, m_velocity);
+	DrawCircle(m_position.x, m_position.y, 12, YELLOW);
+	DrawLine(m_position.x, m_position.y,
+		targetHeading.x, targetHeading.y, RED);
 }

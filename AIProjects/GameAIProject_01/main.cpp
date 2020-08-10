@@ -8,8 +8,7 @@ int main(int argc, char* argv[])
 {
     srand(time(NULL));
 	{      
-		Application app;
-		
+		Application app;		
 		SetTargetFPS(60);
 		app.Run();
 	}

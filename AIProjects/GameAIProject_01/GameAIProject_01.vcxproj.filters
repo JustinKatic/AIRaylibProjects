@@ -63,7 +63,7 @@
     <ClCompile Include="Graph2DEditor.cpp">
       <Filter>Source Files\GraphNodes.cpp</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
+    <ClCompile Include="RedGhost.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,7 +104,7 @@
     <ClInclude Include="Graph2DEditor.h">
       <Filter>Header Files\GraphNodes.h</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
+    <ClInclude Include="RedGhost.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

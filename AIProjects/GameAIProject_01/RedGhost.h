@@ -1,19 +1,15 @@
 #pragma once
 #include "GameObject.h"
 
-
-class KeyBoardBehaviour;
-class SeekBehaviour;
-class FleeBehaviour;
-class WanderBehaviour;
 class PathFindingBehaviour;
+class FleeBehaviour;
 class Graph2DEditor;
 
-class Player : public GameObject
+class RedGhost : public GameObject
 {
 public:
-	Player();
-	virtual ~Player();
+	RedGhost();
+	virtual ~RedGhost();
 
 	virtual void Update(float deltaTime);
 	virtual void Draw();
@@ -25,15 +21,13 @@ public:
 
 
 protected:
-	KeyBoardBehaviour* m_kbBehaviour;
-	SeekBehaviour* m_seekBehaviour;
-	FleeBehaviour* m_fleeBehaviour;
-	WanderBehaviour* m_wanderBehaviour;
+
 	PathFindingBehaviour* m_pathFindingBehaviour;
+	FleeBehaviour* m_fleeBehaviour;
 	Graph2DEditor* m_graph2DEditor = nullptr;
+
 
 
 private:
 
 };
-

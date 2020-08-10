@@ -30,16 +30,16 @@ public:
 
 
 
-	std::vector<Vector2> m_targetNodes;
 
 protected:
 	Vector2 m_target;
 	float m_targetRadius;
 
+	std::vector<Vector2> m_targetNodes;
 	
 	std::function<void()> m_onArriveFn;
 	bool pathAdded = false;
-	Graph2DEditor* m_graph2DEditor;
+	//Graph2DEditor* m_graph2DEditor;
 
 private:
 

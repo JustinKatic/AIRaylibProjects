@@ -24,12 +24,7 @@ void GameObject::Update(float deltaTime)
 }
 void GameObject::Draw()
 {
-	m_behaviour->Draw(this);
-	// Debug Draw
-	Vector2 targetHeading = Vector2Add(m_position, m_velocity);
-	DrawCircle(m_position.x, m_position.y, 12, YELLOW);
-	DrawLine(m_position.x, m_position.y,
-		targetHeading.x, targetHeading.y, RED);
+
 }
 void GameObject::ApplyForce(const Vector2& force)
 {
