@@ -2,11 +2,13 @@
 #include "raymath.h"
 
 class Behaviour;
+class Application;
 
 class GameObject
 {
 public:
-    GameObject();
+    GameObject(Application * app);
+
     virtual ~GameObject();
     virtual void Update(float deltaTime);
     virtual void Draw();
@@ -24,6 +26,8 @@ public:
 
 
     void ApplyForce(const Vector2& force);
+
+    Application* GetApp();
     
 protected:
     Vector2 m_position = { 0, 0 };
@@ -34,6 +38,7 @@ protected:
 
     Vector2 m_direction;
 
+    Application* m_app;
 
 
 

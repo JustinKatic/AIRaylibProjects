@@ -6,6 +6,7 @@
 #include "Graph2D.h"
 #include "Graph2DEditor.h"
 #include "RedGhost.h"
+#include <iostream>
 
 
 Application::Application()
@@ -43,16 +44,44 @@ void Application::Load()
 {
 	//===============================================================================================================
 
+
+	noGo = std::vector<Rect>({
+		//top row recs
+		{ {5.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight }},
+		{ {15.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
+		{ {25.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
+		{ {35.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
+		{ {45.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
+
+			//bottom row recs
+		{ {5.0f * m_tileWidth, 17.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
+		{ {15.0f * m_tileWidth, 17.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
+		{ {25.0f * m_tileWidth, 17.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
+		{ {35.0f * m_tileWidth, 17.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
+		{ {45.0f * m_tileWidth, 17.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
+
+		//top wall
+		{ {0.0f * m_tileWidth, 0.0f * m_tileHeight}, { 56.0f * m_tileWidth, 1.0f * m_tileHeight} },
+		//bottom wall
+		{ {0.0f * m_tileWidth, 29.0f * m_tileHeight}, {56.0f * m_tileWidth, 1.0f * m_tileHeight} },
+		//left wall
+		{ {0.0f * m_tileWidth, 0.0f * m_tileHeight}, { 1.0f * m_tileWidth, 30.0f * m_tileHeight} },
+		//right wall
+		{ {55.0f * m_tileWidth, 0.0f * m_tileHeight}, { 1.0f * m_tileWidth, 30.0f * m_tileHeight} },
+
+
+	});
+
 	m_graph = new Graph2D();
 	m_graphEditor = new Graph2DEditor();
 	m_graphEditor->SetGraph(m_graph);
 
 
-	auto player = new Player();
+	auto player = new Player(this);
 	player->SetFriction(1.0f);
-	m_player1 = player;
+	m_player = player;
 
-	auto redGhost = new RedGhost();
+	auto redGhost = new RedGhost(this);
 	redGhost->SetFriction(1.0f);
 	redGhost->SetEditor(m_graphEditor);
 	m_redGhost = redGhost;
@@ -80,32 +109,31 @@ void Application::Load()
 				redGhost->SetPosition({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
 			}
 		}
+	}
+	for (auto node : m_graph->GetNodes())
+	{
+		std::vector<Graph2D::Node*> nearbyNodes;
+		m_graph->GetNearbyNodes(node->data, 50, nearbyNodes);
 
-		for (auto node : m_graph->GetNodes())
+		for (auto connectedNode : nearbyNodes)
 		{
-			std::vector<Graph2D::Node*> nearbyNodes;
-			m_graph->GetNearbyNodes(node->data, 50, nearbyNodes);
-
-			for (auto connectedNode : nearbyNodes)
+			if (connectedNode == node)
 			{
-				if (connectedNode == node)
-				{
-					continue;
-				}
-				float dist = Vector2Distance(node->data, connectedNode->data);
-				m_graph->AddEdge(node, connectedNode, dist);
-				m_graph->AddEdge(connectedNode, node, dist);
+				continue;
 			}
+			float dist = Vector2Distance(node->data, connectedNode->data);
+			m_graph->AddEdge(node, connectedNode, dist);
+			m_graph->AddEdge(connectedNode, node, dist);
 		}
 	}
 }
-	
+
 
 
 void Application::Unload()
 {
-	delete m_player1;
-	m_player1 = nullptr;
+	delete m_player;
+	m_player = nullptr;
 
 	delete m_redGhost;
 	m_redGhost = nullptr;
@@ -117,10 +145,19 @@ void Application::Unload()
 	m_graph = nullptr;
 	//===============================================================================================================
 }
+Player* Application::GetPlayer()
+{
+	return (Player*)m_player;
+}
+Graph2D* Application::GetGraph()
+{
+	return m_graph;
+}
 void Application::Update(float dt)
 {
-	m_player1->Update(dt);
+	m_player->Update(dt);
 	//===============================================================================================================
+
 	m_redGhost->Update(dt);
 	//===============================================================================================================
 	m_graphEditor->Update(dt);
@@ -152,7 +189,6 @@ void Application::Draw()
 			{
 				DrawCircle(xPos + m_tileWidth / 2, yPos + m_tileHeight / 2, 8, ORANGE);
 			}
-
 		}
 	}
 	//===============================================================================================================
@@ -160,7 +196,7 @@ void Application::Draw()
 	//===============================================================================================================
 	m_redGhost->Draw();
 	//===============================================================================================================
-	m_player1->Draw();
+	m_player->Draw();
 	//===============================================================================================================
 	EndDrawing();
 }

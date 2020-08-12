@@ -3,12 +3,12 @@
 #include"SeekBehaviour.h"
 #include"FleeBehaviour.h"
 #include"WanderBehaviour.h"
-#include"PathFindingBehaviour.h"
 #include"Graph2DEditor.h"
 #include<random>
 #include<iostream>
 
-Player::Player()
+
+Player::Player(Application *app) : GameObject(app)
 {
 	m_kbBehaviour = new KeyBoardBehaviour();
 
@@ -20,14 +20,10 @@ Player::Player()
 			SetBehaviour(m_kbBehaviour);
 		});
 
-	
 	m_fleeBehaviour = new FleeBehaviour();
 	m_fleeBehaviour->SetTargetRadius(100);
 
 	m_wanderBehaviour = new WanderBehaviour();
-
-	m_pathFindingBehaviour = new PathFindingBehaviour();
-	m_pathFindingBehaviour->SetTargetRadius(15);
 
 	SetBehaviour(m_kbBehaviour);
 
@@ -63,17 +59,14 @@ void Player::Update(float deltaTime)
 	{
 		SetBehaviour(m_wanderBehaviour);
 	}
-	if (m_graph2DEditor && !m_graph2DEditor->m_path.empty() && IsKeyDown(KEY_FOUR))
-	{
-		//m_pathFindingBehaviour->SetTarget();
-		m_pathFindingBehaviour->AddPath(m_graph2DEditor->m_path);
-		SetBehaviour(m_pathFindingBehaviour);
-	}
+
 	GameObject::Update(deltaTime);
+
 }
 
 void Player::Draw()
 {
+	GameObject::Draw();
 	Vector2 targetHeading = Vector2Add(m_position, m_velocity);
 	DrawCircle(m_position.x, m_position.y, 12, YELLOW);
 	DrawLine(m_position.x, m_position.y,

@@ -2,6 +2,8 @@
 #include "KeyBoardBehaviour.h"
 #include "GameObject.h"
 #include "raylib.h"
+#include <iostream>
+#include "Application.h"
 
 KeyBoardBehaviour::KeyBoardBehaviour() : Behaviour()
 {
@@ -12,7 +14,7 @@ KeyBoardBehaviour::KeyBoardBehaviour() : Behaviour()
 	m_moveForce = 200;
 }
 
-KeyBoardBehaviour::KeyBoardBehaviour(int upKey, int downKey, int leftKey, int rightKey, float moveForce) : 
+KeyBoardBehaviour::KeyBoardBehaviour(int upKey, int downKey, int leftKey, int rightKey, float moveForce) :
 	Behaviour(),
 	m_upKey(upKey),
 	m_downKey(downKey),
@@ -20,7 +22,7 @@ KeyBoardBehaviour::KeyBoardBehaviour(int upKey, int downKey, int leftKey, int ri
 	m_rightKey(rightKey),
 	m_moveForce(moveForce)
 {
-	
+
 }
 
 KeyBoardBehaviour::~KeyBoardBehaviour()
@@ -30,6 +32,22 @@ KeyBoardBehaviour::~KeyBoardBehaviour()
 
 void KeyBoardBehaviour::Update(GameObject* obj, float deltaTime)
 {
+
+
+	auto& noGo = obj->GetApp()->noGo;
+
+	for (int i = 0; i < 14; i++)
+	{
+		if (obj->GetPosition().x > noGo[i].pos.x && obj->GetPosition().x < noGo[i].pos.x + noGo[i].size.x &&
+			obj->GetPosition().y > noGo[i].pos.y && obj->GetPosition().y < noGo[i].pos.y + noGo[i].size.y)
+		{
+			Vector2 newVelocity;
+			newVelocity.x = obj->GetVelocity().x * -1;
+			newVelocity.y = obj->GetVelocity().y * -1;
+			obj->SetVelocity(newVelocity);
+		}
+	}
+
 	if (IsKeyDown(m_leftKey)) obj->ApplyForce({ -m_moveForce, 0 });
 	if (IsKeyDown(m_rightKey)) obj->ApplyForce({ m_moveForce, 0 });
 	if (IsKeyDown(m_upKey)) obj->ApplyForce({ 0,  -m_moveForce });

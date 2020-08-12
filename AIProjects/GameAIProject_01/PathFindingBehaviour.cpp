@@ -27,10 +27,10 @@ void PathFindingBehaviour::Update(GameObject* obj, float deltaTime)
 	{
 		m_targetNodes.erase(m_targetNodes.begin());
 
-		if (m_onArriveFn)
-		{
-			m_onArriveFn();
-		}
+		//if (m_onArriveFn)
+		//{
+		//	m_onArriveFn();
+		//}
 	}
 	if (m_targetNodes.empty() == false)
 	{

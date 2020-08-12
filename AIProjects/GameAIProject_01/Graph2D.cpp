@@ -64,7 +64,6 @@ bool Graph2D::FindPath(Node* startNode, std::function<bool(Node*)> isGoalNode, s
 
 
 		//if current node is the goal node store the path it used inside of out_path node
-		//TODO: not entering loop
 		if (isGoalNode(currentNode->graphNode))
 		{
 			PathFindNode* current = currentNode;

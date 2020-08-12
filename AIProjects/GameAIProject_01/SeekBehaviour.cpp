@@ -2,7 +2,7 @@
 #include <iostream>
 #include "GameObject.h"
 
-SeekBehaviour::SeekBehaviour() : Behaviour()
+SeekBehaviour::SeekBehaviour()
 {
 
 }

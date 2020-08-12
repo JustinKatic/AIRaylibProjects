@@ -1,8 +1,9 @@
 #pragma once
 #include "GameObject.h"
-
+#include <vector>
 class Graph2D;
 class Graph2DEditor;
+class Player;
 
 
 enum MAP_ITEMS
@@ -21,6 +22,12 @@ class Application
 {
 public:
 
+	struct Rect
+	{
+		Vector2 pos;
+		Vector2 size;
+	};
+
 	Application();
 	~Application();
 
@@ -32,8 +39,13 @@ public:
 	void Load();
 	void Unload();
 
+	Player* GetPlayer();
+	Graph2D* GetGraph();
+
+	std::vector<Rect> noGo;
+
 private:
-	GameObject* m_player1 = nullptr;
+	GameObject* m_player = nullptr;
 	GameObject* m_redGhost = nullptr;
 	int m_windowWidth;
 	int m_windowHeight;
@@ -54,6 +66,9 @@ private:
 
 	static const int MAP_ROWS = 30;
 	static const int MAP_COLS = 56;
+
+
+
 
 	int m_map[MAP_ROWS][MAP_COLS] = {
 		{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},

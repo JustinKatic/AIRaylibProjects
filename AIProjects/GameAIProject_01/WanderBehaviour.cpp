@@ -2,6 +2,7 @@
 #include"GameObject.h"
 #include <time.h>
 #include <iostream>
+#include"Application.h"
 
 WanderBehaviour::WanderBehaviour()
 {
@@ -17,38 +18,38 @@ void WanderBehaviour::Update(GameObject* obj, float deltaTime)
 {
 	obj->SetFriction(1);
 
+	auto& noGo = obj->GetApp()->noGo;
+
+	for (int i = 0; i < 14; i++)
+	{
+		if (obj->GetPosition().x > noGo[i].pos.x && obj->GetPosition().x < noGo[i].pos.x + noGo[i].size.x &&
+			obj->GetPosition().y > noGo[i].pos.y && obj->GetPosition().y < noGo[i].pos.y + noGo[i].size.y)
+		{
+			Vector2 newVelocity;
+			newVelocity.x = obj->GetVelocity().x * -1;
+			newVelocity.y = obj->GetVelocity().y * -1;
+			obj->SetVelocity(newVelocity);
+		}
+	}
+
 	m_time += deltaTime;
 	if (m_time > 0.1)
 	{
-		if (obj->GetPosition().x < 40 || obj->GetPosition().x > GetScreenWidth() - 40 || obj->GetPosition().y < 40 || obj->GetPosition().y > GetScreenHeight() -40)
+		Vector2 defVelocity = { 100.0f, 100.0f };
+		if (obj->GetVelocity().x == 0.0f && obj->GetVelocity().y == 0.0f)
 		{
-			Vector2 newVelocity;
-			newVelocity.x = GetScreenWidth() * 0.5f - obj->GetPosition().x;
-			newVelocity.y = GetScreenHeight() * 0.5f - obj->GetPosition().y;
-
-			newVelocity = Vector2Normalize(newVelocity);
-			newVelocity = Vector2Scale(newVelocity, 100);
-
-			obj->SetVelocity(newVelocity);
+			obj->SetVelocity(defVelocity);
 		}
-		else
-		{
-			Vector2 defVelocity = { 100.0f, 100.0f };
-			if (obj->GetVelocity().x == 0.0f && obj->GetVelocity().y == 0.0f)
-			{
-				obj->SetVelocity(defVelocity);
-			}
-			float theta = atan2(obj->GetVelocity().x, obj->GetVelocity().y);
-			theta = theta * 57.2958;
-			float radius = m_defaultSpeed;
-			float finalTheta = (theta - m_offset) + rand() % (2 * m_offset);
-			finalTheta = finalTheta * 0.01745;
-			Vector2 newVelocity;
-			newVelocity.x = radius * sinf(finalTheta);
-			newVelocity.y = radius * cosf(finalTheta);
-			obj->SetVelocity(newVelocity);
-			m_time = 0;
-		}
+		float theta = atan2(obj->GetVelocity().x, obj->GetVelocity().y);
+		theta = theta * 57.2958;
+		float radius = m_defaultSpeed;
+		float finalTheta = (theta - m_offset) + rand() % (2 * m_offset);
+		finalTheta = finalTheta * 0.01745;
+		Vector2 newVelocity;
+		newVelocity.x = radius * sinf(finalTheta);
+		newVelocity.y = radius * cosf(finalTheta);
+		obj->SetVelocity(newVelocity);
+		m_time = 0;
 	}
 }
 

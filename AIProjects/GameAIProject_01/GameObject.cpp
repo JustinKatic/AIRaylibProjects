@@ -1,9 +1,10 @@
 #include "GameObject.h"
 #include"Behaviour.h";
-GameObject::GameObject()
+GameObject::GameObject(Application* app)
 {
-
+	m_app = app;
 }
+
 GameObject::~GameObject()
 {
 
@@ -24,13 +25,22 @@ void GameObject::Update(float deltaTime)
 }
 void GameObject::Draw()
 {
-
+	if (m_behaviour != nullptr)
+	{
+		m_behaviour->Draw(this);
+	}
 }
 void GameObject::ApplyForce(const Vector2& force)
 {
 	// m_acceleration += force
 	m_acceleration = Vector2Add(m_acceleration, force);
 }
+
+Application* GameObject::GetApp()
+{
+	return m_app; 
+}
+
 const Vector2& GameObject::GetPosition() const
 {
 	return m_position;

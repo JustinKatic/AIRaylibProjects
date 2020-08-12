@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
+
 class PathFindingBehaviour;
 class FleeBehaviour;
 class Graph2DEditor;
@@ -8,7 +9,7 @@ class Graph2DEditor;
 class RedGhost : public GameObject
 {
 public:
-	RedGhost();
+	RedGhost(Application* app);
 	virtual ~RedGhost();
 
 	virtual void Update(float deltaTime);

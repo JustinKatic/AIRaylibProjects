@@ -8,11 +8,12 @@ class FleeBehaviour;
 class WanderBehaviour;
 class PathFindingBehaviour;
 class Graph2DEditor;
+class Application;
 
 class Player : public GameObject
 {
 public:
-	Player();
+	Player(Application* app);
 	virtual ~Player();
 
 	virtual void Update(float deltaTime);
@@ -31,6 +32,7 @@ protected:
 	WanderBehaviour* m_wanderBehaviour;
 	PathFindingBehaviour* m_pathFindingBehaviour;
 	Graph2DEditor* m_graph2DEditor = nullptr;
+
 
 
 private:

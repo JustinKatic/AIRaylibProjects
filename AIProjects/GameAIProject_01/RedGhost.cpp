@@ -2,8 +2,9 @@
 #include"PathFindingBehaviour.h"
 #include"FleeBehaviour.h"
 #include"Graph2DEditor.h"
+#include "Application.h"
 
-RedGhost::RedGhost()
+RedGhost::RedGhost(Application* app) : GameObject(app)
 {
 
 
@@ -28,18 +29,33 @@ RedGhost::~RedGhost()
 void RedGhost::Update(float deltaTime)
 {
 
-	if (IsKeyDown(KEY_TWO))
+
+	// get nodes near ourself
+	std::vector<Graph2D::Node*> nearbyNodes;
+	m_app->GetGraph()->GetNearbyNodes(GetPosition(), 20, nearbyNodes);
+
+	// get nodes near the player
+	std::vector<Graph2D::Node*> nearbyGoalNodes;
+	m_app->GetGraph()->GetNearbyNodes(m_app->GetPlayer()->GetPosition(), 20, nearbyGoalNodes);
+	if (!nearbyNodes.empty() && !nearbyGoalNodes.empty())
 	{
-		m_fleeBehaviour->SetTarget(GetMousePosition());
-		SetBehaviour(m_fleeBehaviour);
+		// calculate a path from us to the player
+		std::list<Graph2D::Node*> gNodePath;
+		m_app->GetGraph()->FindPath(nearbyNodes[0], nearbyGoalNodes[0], gNodePath);
+		// create the path as a vector2
+		std::vector<Vector2> path;
+		for (auto gp : gNodePath)
+			path.push_back(gp->data);
+		m_pathFindingBehaviour->AddPath(path);
 	}
 
-	if (m_graph2DEditor && !m_graph2DEditor->m_path.empty() && IsKeyDown(KEY_FOUR))
+
+	float distToTarget = Vector2Distance(GetPosition(), m_player->GetPosition());
+	if (distToTarget < m_radius)
 	{
-		//m_pathFindingBehaviour->SetTarget();
-		m_pathFindingBehaviour->AddPath(m_graph2DEditor->m_path);
-		SetBehaviour(m_pathFindingBehaviour);
+		DrawText("OUCH", 100, 100, 100, RED);
 	}
+
 	GameObject::Update(deltaTime);
 }
 
