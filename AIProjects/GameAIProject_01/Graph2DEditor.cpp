@@ -66,23 +66,29 @@ void Graph2DEditor::Update(float deltaTime)
 		m_graph->GetNearbyNodes(GetMousePosition(), 8, neighbouringNodes);
 		if (neighbouringNodes.empty() == false)
 		{
-			if (m_startNode == nullptr) m_startNode = neighbouringNodes[0];
+			if (m_startNode == nullptr)
+			{
+				m_startNode = neighbouringNodes[0];
+			}
 
-			else if (m_endNode == nullptr) m_endNode = neighbouringNodes[0];
+			else if (m_endNode == nullptr)
+			{
+				m_endNode = neighbouringNodes[0];
+			}
 
-			else { m_startNode = neighbouringNodes[0]; m_endNode = nullptr; }
+			else 
+			{ 
+				m_startNode = neighbouringNodes[0]; m_endNode = nullptr;
+			}
+
 			// Begin Search
 			// call the FindPath method
 			if (m_endNode != nullptr)
 			{
-				auto isGoalNode = [this](Graph2D::Node* node)
-				{
-					return node == m_endNode;
-				};
-
+				
 				std::list<Graph2D::Node*> path; // stores the path
 
-				if (m_graph->FindPath(m_startNode, isGoalNode, path) == true)
+				if (m_graph->FindPath(m_startNode, m_endNode, path, false) == true)
 				{
 					//populate the std::vector<Vetor2> path with our path data.
 					m_path.clear();

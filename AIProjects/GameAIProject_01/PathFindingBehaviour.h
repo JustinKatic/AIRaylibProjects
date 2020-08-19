@@ -28,7 +28,10 @@ public:
 
 	void AddPath(std::vector<Vector2>& path);
 
+	const float& GetSpeed() const;
+	void SetSpeed(const float& speed);
 
+	void ChangeMode(std::function<void()> callback);
 
 
 protected:
@@ -37,9 +40,11 @@ protected:
 
 	std::vector<Vector2> m_targetNodes;
 	
-	std::function<void()> m_onArriveFn;
 	bool pathAdded = false;
-	//Graph2DEditor* m_graph2DEditor;
+
+	float m_speed;
+
+	std::function<void()> m_onArriveFunc;
 
 private:
 

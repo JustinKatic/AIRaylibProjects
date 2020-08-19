@@ -36,7 +36,7 @@ void KeyBoardBehaviour::Update(GameObject* obj, float deltaTime)
 
 	auto& noGo = obj->GetApp()->noGo;
 
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < 17; i++)
 	{
 		if (obj->GetPosition().x > noGo[i].pos.x && obj->GetPosition().x < noGo[i].pos.x + noGo[i].size.x &&
 			obj->GetPosition().y > noGo[i].pos.y && obj->GetPosition().y < noGo[i].pos.y + noGo[i].size.y)

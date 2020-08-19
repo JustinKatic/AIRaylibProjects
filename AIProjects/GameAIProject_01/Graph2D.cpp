@@ -1,5 +1,8 @@
 #include "Graph2D.h"
 #include "Graph.h"
+#include <iostream>
+#include "Application.h"
+#include "Player.h"
 
 
 Graph2D::Graph2D()
@@ -31,8 +34,10 @@ bool Graph2D::FindPath(Node* startNode, std::function<bool(Node*)> isGoalNode, s
 	std::list<PathFindNode*> stack;
 	std::vector<PathFindNode*> alreadyProcessed;
 
+	bool pathFound = false;
+
 	//landa function to find is node already exists in either stack list or alreadyProcessed list
-	auto GetNodeInLists = [&](Node* nodeToFind) -> PathFindNode* 
+	auto GetNodeInLists = [&](Node* nodeToFind) -> PathFindNode*
 	{
 		for (auto& n : stack)
 			if (n->graphNode == nodeToFind)
@@ -48,6 +53,7 @@ bool Graph2D::FindPath(Node* startNode, std::function<bool(Node*)> isGoalNode, s
 	pFNode->gScore = 0.0f;
 	pFNode->parent = nullptr;
 	pFNode->graphNode = startNode;
+	//landa function to find is node already exists in either stack list or alreadyProcessed list
 
 	//push start node onto stack
 	stack.push_back(pFNode);
@@ -71,15 +77,19 @@ bool Graph2D::FindPath(Node* startNode, std::function<bool(Node*)> isGoalNode, s
 			{
 				out_path.push_front(current->graphNode);
 				current = current->parent;
-				
-				//TODO: need to set current node to currents parent
 			}
-			return true;
+			pathFound = true;
+			break;
 		}
 
 		//for each edge in current nodes connections
 		for (Edge& edge : currentNode->graphNode->connections)
 		{
+
+			float influenceCost = GetInfluenceValueAtPos(edge.to->data.x, edge.to->data.y) * 10;
+
+			float gScore = currentNode->gScore + edge.data + influenceCost;
+
 			//checks if current nodes connection is in stack list or stack list
 			auto pFNodeChild = GetNodeInLists(edge.to);
 
@@ -89,19 +99,20 @@ bool Graph2D::FindPath(Node* startNode, std::function<bool(Node*)> isGoalNode, s
 				//create a new node
 				PathFindNode* pFNodeChild = new PathFindNode();
 				//add the currents node score to the PFNodeChild score
-				pFNodeChild->gScore = currentNode->gScore + edge.data;
+				pFNodeChild->gScore = gScore;
 				//make PFNodeChilds parent = current node
 				pFNodeChild->parent = currentNode;
 				pFNodeChild->graphNode = edge.to;
 				stack.push_back(pFNodeChild);
 			}
-			//node was found in stack list or visited list
+			//node was found in stack list or visited 
 			else
 			{
-				if (pFNodeChild->gScore > currentNode->gScore + edge.data)
+				//update the nodes parent if its faster from this current node
+				if (pFNodeChild->gScore > gScore)
 				{
 					pFNodeChild->parent = currentNode;
-					pFNodeChild->gScore = currentNode->gScore + edge.data;
+					pFNodeChild->gScore = gScore;
 				}
 			}
 		}
@@ -112,10 +123,21 @@ bool Graph2D::FindPath(Node* startNode, std::function<bool(Node*)> isGoalNode, s
 			});
 	}
 
-	return false;
+	for (auto pFNode : stack)
+	{
+		delete pFNode;
+		pFNode = nullptr;
+	}
+	for (auto pFNode : alreadyProcessed)
+	{
+		delete pFNode;
+		pFNode = nullptr;
+	}
+
+	return pathFound;
 }
 
-bool Graph2D::FindPath(Node* startNode, Node* goalNode, std::list<Node*>& out_path)
+bool Graph2D::FindPath(Node* startNode, Node* goalNode, std::list<Node*>& out_path, bool useInfluence)
 {
 	std::list<PathFindNode*> stack;
 	std::vector<PathFindNode*> alreadyProcessed;
@@ -155,7 +177,6 @@ bool Graph2D::FindPath(Node* startNode, Node* goalNode, std::list<Node*>& out_pa
 
 
 		//if current node is the goal node store the path it used inside of out_path node
-		//TODO: not entering loop
 		if (goalNode == currentNode->graphNode)
 		{
 			PathFindNode* current = currentNode;
@@ -164,7 +185,6 @@ bool Graph2D::FindPath(Node* startNode, Node* goalNode, std::list<Node*>& out_pa
 				out_path.push_front(current->graphNode);
 				current = current->parent;
 
-				//TODO: need to set current node to currents parent
 			}
 			return true;
 		}
@@ -172,13 +192,18 @@ bool Graph2D::FindPath(Node* startNode, Node* goalNode, std::list<Node*>& out_pa
 		//for each edge in current nodes connections
 		for (Edge& edge : currentNode->graphNode->connections)
 		{
+
 			//checks if current nodes connection is in stack list or stack list
+			float influenceMultiplier = useInfluence ? 1.0f : 0.0f;
+			float influenceCost = influenceMultiplier * GetInfluenceValueAtPos(edge.to->data.x, edge.to->data.y) * 1000;
+
 			auto pFNodeChild = GetNodeInLists(edge.to);
 
-			float gScore = currentNode->gScore + edge.data;
+
+			float gScore = currentNode->gScore + edge.data + influenceCost;
 
 			// TODO: optimise this. // Distance Squared from node to goalNode.
-			float hScore = Vector2Distance(edge.to->data, goalNode->data) * Vector2Distance(edge.to->data, goalNode->data);
+			float hScore = Vector2Distance(edge.to->data, goalNode->data); // *Vector2Distance(edge.to->data, goalNode->data);
 
 			// Final Score.
 			float fScore = gScore + hScore;
@@ -201,7 +226,7 @@ bool Graph2D::FindPath(Node* startNode, Node* goalNode, std::list<Node*>& out_pa
 			//node was found in stack list or visited list
 			else
 			{
-				if (pFNodeChild->fScore > fScore)
+				if (pFNodeChild->gScore > gScore)
 				{
 					pFNodeChild->parent = currentNode;
 					pFNodeChild->gScore = gScore;
@@ -220,4 +245,42 @@ bool Graph2D::FindPath(Node* startNode, Node* goalNode, std::list<Node*>& out_pa
 	return false;
 }
 
-// PATHMODE:ASTAR, PATHMODE::DIJKSTRAS, PATHMODE::BFS, PATHMODE::DFS
+
+
+void Graph2D::SetInfluenceMap(std::vector<std::vector<float>>* influenceMap, int tileWidth, int tileHeight)
+{
+	m_influenceMap = influenceMap;
+}
+
+std::vector<std::vector<float>>& Graph2D::GetInfluenceMap()
+{
+	return m_influenceMap == nullptr ? emptyInfluenceMap : *m_influenceMap;
+}
+
+int Graph2D::GetInfluenceTileWidth()
+{
+	return m_tileWidth;
+}
+int Graph2D::GetInfluenceTileHeight()
+{
+	return m_tileHeight;
+}
+
+int Graph2D::GetInfluenceValue(int xId, int yId)
+{
+	auto& map = GetInfluenceMap();
+	if (yId >= map.size())
+		return 0;
+
+	if (xId >= map[yId].size())
+		return 0;
+
+	return map[yId][xId];
+}
+
+int Graph2D::GetInfluenceValueAtPos(float xPos, float yPos)
+{
+	int toTileXId = xPos / GetInfluenceTileWidth();
+	int toTileYId = yPos / GetInfluenceTileHeight();
+	return GetInfluenceValue(toTileXId, toTileYId);
+}

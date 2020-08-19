@@ -73,6 +73,20 @@ public:
 	//========================================================================================
 	//BFS
 	//========================================================================================
+	/*
+	1.push start nide on stack
+	2.while stack !empty
+		-current node = stack node
+		-stack.pop.front()
+		-visted.push(currentnode)
+		-process current node
+
+	3.foreach connection
+		-if (connection.to not in stack or visited list
+		{
+			stack.push (connection.to)
+		}
+	*/
 	Node* ForEachBFS(Node* startNode, std::function<bool(Node* n)> process)
 	{
 		std::vector<Node*> stack;
@@ -82,26 +96,32 @@ public:
 		{
 			startNode = m_nodes[0];
 		}
-
 		stack.push_back(startNode);
 
 		while (stack.empty() == false)
 		{
+			//get node at front of stack and then remove the node from the stack
 			Node* n = stack.back();
 			stack.pop_back();
+			//add the node to the visited list
 			visited.push_back(n);
 			process(n);
 
+			//add children in the stack if they have not been visted
 			for (Edge& edge : n->connections)
 			{
+				//does the node exist in the visited list or stack list?
 				bool inStack = std::find(stack.begin(), stack.end(), edge.to) != stack.end();
 				bool inVisited = std::find(visited.begin(), visited.end(), edge.to) != visited.end();
 
+				//if true go back to top of while loop
 				if (inStack == true || inVisited == true)
 				{
 					continue;
 				}
-				stack.insert(stack.begin(), edge.to);
+				//if was not in list push back edge.to into stack list
+				stack.push_back(edge.to);
+
 			}
 		}
 		return nullptr;
@@ -137,7 +157,7 @@ public:
 				{
 					continue;
 				}
-				stack.push_back(edge.to);
+				stack.insert(stack.begin(), edge.to);
 			}
 		}
 		return nullptr;

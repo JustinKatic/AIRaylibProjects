@@ -21,7 +21,7 @@ public:
 	void SetTarget(const Vector2& target);
 	void SetTargetRadius(const float& radius);
 
-
+	float m_speed = 100;
 protected:
 	Vector2 m_target;
 	float m_targetRadius = 1.0f;

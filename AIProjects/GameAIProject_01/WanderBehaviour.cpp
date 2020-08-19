@@ -20,12 +20,13 @@ void WanderBehaviour::Update(GameObject* obj, float deltaTime)
 
 	auto& noGo = obj->GetApp()->noGo;
 
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		if (obj->GetPosition().x > noGo[i].pos.x && obj->GetPosition().x < noGo[i].pos.x + noGo[i].size.x &&
 			obj->GetPosition().y > noGo[i].pos.y && obj->GetPosition().y < noGo[i].pos.y + noGo[i].size.y)
 		{
 			Vector2 newVelocity;
+			obj->SetFriction(-10);
 			newVelocity.x = obj->GetVelocity().x * -1;
 			newVelocity.y = obj->GetVelocity().y * -1;
 			obj->SetVelocity(newVelocity);
@@ -57,26 +58,5 @@ void WanderBehaviour::Draw(GameObject* obj)
 {
 
 }
-
-//const Vector2& WanderBehaviour::GetTarget() const
-//{
-//	return m_target;
-//}
-
-//const float& WanderBehaviour::GetTargetRadius() const
-//{
-//	return m_targetRadius;
-//}
-
-
-//void WanderBehaviour::SetTarget(const Vector2& target)
-//{
-//	m_target = target;
-//}
-
-//void WanderBehaviour::SetTargetRadius(const float& radius)
-//{
-//	m_targetRadius = radius;
-//}
 
 

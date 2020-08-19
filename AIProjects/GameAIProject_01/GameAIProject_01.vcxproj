@@ -170,6 +170,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Behaviour.cpp" />
+    <ClCompile Include="BlueGhost.cpp" />
     <ClCompile Include="FleeBehaviour.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Graph2D.cpp" />
@@ -185,6 +186,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="BlueGhost.h" />
     <ClInclude Include="FleeBehaviour.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Graph.h" />

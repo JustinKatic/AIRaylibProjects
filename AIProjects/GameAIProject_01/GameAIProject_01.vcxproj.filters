@@ -66,6 +66,9 @@
     <ClCompile Include="RedGhost.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BlueGhost.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -105,6 +108,9 @@
       <Filter>Header Files\GraphNodes.h</Filter>
     </ClInclude>
     <ClInclude Include="RedGhost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlueGhost.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

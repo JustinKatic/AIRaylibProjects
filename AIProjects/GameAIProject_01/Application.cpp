@@ -6,6 +6,7 @@
 #include "Graph2D.h"
 #include "Graph2DEditor.h"
 #include "RedGhost.h"
+#include "BlueGhost.h"
 #include <iostream>
 
 
@@ -15,6 +16,8 @@ Application::Application()
 	m_screenHeight = MAP_ROWS * 33;
 	m_tileWidth = m_screenWidth / MAP_COLS;
 	m_tileHeight = m_screenHeight / MAP_ROWS;
+
+
 }
 Application::~Application()
 {
@@ -33,6 +36,7 @@ void Application::Run()
 	{
 		float dt = GetFrameTime();
 		Update(dt);
+		UpdateInfluence(dt);
 		Draw();
 	}
 	Unload();
@@ -43,17 +47,41 @@ void Application::Run()
 void Application::Load()
 {
 	//===============================================================================================================
+	backGroundImg = LoadImage("../pacManSprites/space.png");
+	backGroundTex = LoadTextureFromImage(backGroundImg);
 
+	wallImg = LoadImage("../pacManSprites/neonSquare.png");
+	wallTex = LoadTextureFromImage(wallImg);
+
+	sideWallImg = LoadImage("../pacManSprites/neonSquareSide.png");
+	sideWallTex = LoadTextureFromImage(sideWallImg);
+
+	topBottomWallImg = LoadImage("../pacManSprites/neonSquareTopBottom.png");
+	topBottomWallTex = LoadTextureFromImage(topBottomWallImg);
+
+	topBottomWallImg = LoadImage("../pacManSprites/neonSquareTopBottom.png");
+	topBottomWallTex = LoadTextureFromImage(topBottomWallImg);
+
+	safeBoxImg = LoadImage("../pacManSprites/neonSquareSafeBox.png");
+	safeBoxTex = LoadTextureFromImage(safeBoxImg);
+
+	VImg = LoadImage("../pacManSprites/V.png");
+	VTex = LoadTextureFromImage(VImg);
 
 	noGo = std::vector<Rect>({
+
+		//safeZoneBox
+		{ {5.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 3.0f * m_tileHeight }},
+		{ {5.0f * m_tileWidth, 8.0f * m_tileHeight}, { 2.0f * m_tileWidth, 2.0f * m_tileHeight }},
+		{ {5.0f * m_tileWidth, 10.0f * m_tileHeight}, { 6.0f * m_tileWidth, 3.0f * m_tileHeight }},
+
 		//top row recs
-		{ {5.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight }},
 		{ {15.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
 		{ {25.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
 		{ {35.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
 		{ {45.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
 
-			//bottom row recs
+		//bottom row recs
 		{ {5.0f * m_tileWidth, 17.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
 		{ {15.0f * m_tileWidth, 17.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
 		{ {25.0f * m_tileWidth, 17.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight} },
@@ -69,10 +97,22 @@ void Application::Load()
 		//right wall
 		{ {55.0f * m_tileWidth, 0.0f * m_tileHeight}, { 1.0f * m_tileWidth, 30.0f * m_tileHeight} },
 
+		//topleft box for player
+		{ {5.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight }},
 
 	});
 
+	for (int y = 0; y < MAP_ROWS; y++)
+	{
+		m_influence.push_back(std::vector<float>()); // add a row
+		for (int x = 0; x < MAP_COLS; x++)
+		{
+			m_influence[y].push_back(0); // add value to row
+		}
+	}
+
 	m_graph = new Graph2D();
+	m_graph->SetInfluenceMap(&m_influence,m_tileWidth,m_tileHeight);
 	m_graphEditor = new Graph2DEditor();
 	m_graphEditor->SetGraph(m_graph);
 
@@ -84,8 +124,13 @@ void Application::Load()
 	auto redGhost = new RedGhost(this);
 	redGhost->SetFriction(1.0f);
 	redGhost->SetEditor(m_graphEditor);
+	redGhost->SetPlayer(player);
 	m_redGhost = redGhost;
 
+	auto blueGhost = new BlueGhost(this);
+	blueGhost->SetFriction(1.0f);
+	blueGhost->SetPlayer(player);
+	m_blueGhost = blueGhost;
 
 
 	for (int y = 0; y < MAP_ROWS; y++)
@@ -100,7 +145,7 @@ void Application::Load()
 			{
 				player->SetPosition({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
 			}
-			if (tileID == FOOD || tileID == START || tileID == POWERUP || tileID == REDGHOST || tileID == BLUEGHOST)
+			if (tileID == FOOD || tileID == START || tileID == POWERUP || tileID == REDGHOST || tileID == BLUEGHOST || tileID == SAFEPATH || tileID == SAFEENTRY  || tileID == SAFEENTRYDOOR)
 			{
 				m_graph->AddNode({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
 			}
@@ -108,12 +153,16 @@ void Application::Load()
 			{
 				redGhost->SetPosition({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
 			}
+			if (tileID == BLUEGHOST)
+			{
+				blueGhost->SetPosition({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
+			}
 		}
 	}
 	for (auto node : m_graph->GetNodes())
 	{
 		std::vector<Graph2D::Node*> nearbyNodes;
-		m_graph->GetNearbyNodes(node->data, 50, nearbyNodes);
+		m_graph->GetNearbyNodes(node->data, 40, nearbyNodes);
 
 		for (auto connectedNode : nearbyNodes)
 		{
@@ -157,17 +206,98 @@ void Application::Update(float dt)
 {
 	m_player->Update(dt);
 	//===============================================================================================================
-
-	m_redGhost->Update(dt);
+	 m_redGhost->Update(dt);
+	//===============================================================================================================
+	 m_blueGhost->Update(dt);
 	//===============================================================================================================
 	m_graphEditor->Update(dt);
 	//===============================================================================================================
+
+	   // what tile index is pacman on?
+	int currentIndexX = (m_player->GetPosition().x) / m_tileWidth;
+	int currentIndexY = (m_player->GetPosition().y) / m_tileHeight;
+
+	if (m_map[currentIndexY][currentIndexX] == FOOD)
+	{
+		m_score += 1;
+		m_map[currentIndexY][currentIndexX] = EMPTY;
+	}
+	if (m_map[currentIndexY][currentIndexX] == POWERUP)
+	{
+		m_player->SetPowerUpBool(true);
+		m_map[currentIndexY][currentIndexX] = EMPTY;
+	}
 }
+void Application::UpdateInfluence(float deltaTime)
+{
+	// what tile index is pacman on?
+	int currentIndexX = (m_player->GetPosition().x) / m_tileWidth;
+	int currentIndexY = (m_player->GetPosition().y) / m_tileHeight;
+
+	int T = currentIndexY - 2;
+	int B = currentIndexY + 2;
+	int L = currentIndexX - 2;
+	int R = currentIndexX + 2;
+
+	T = (T < 0) ? 0 : T;
+	B = (B > MAP_ROWS-1) ? MAP_ROWS-1 : B;
+	L = (L < 0) ? 0 : L;
+	R = (R > MAP_COLS-1) ? MAP_COLS-1 : R;
+
+	
+	for (int y = T; y <= B; y++)
+	{
+		for (int x = L; x <= R; x++)
+		{
+			m_influence[y][x] += 0.02;
+		}
+	}
+
+	for (int y = 0; y < m_influence.size(); y++)
+	{
+		for (int x = 0; x < m_influence[y].size(); x++)
+		{
+			m_influence[y][x] -= 0.01;
+			if (m_influence[y][x] < 0)
+			{
+				m_influence[y][x] = 0;
+			}
+			if (m_influence[y][x] > 1)
+			{
+				m_influence[y][x] = 1;
+			}
+		}
+	}
+}
+
 void Application::Draw()
 {
 	BeginDrawing();
 	ClearBackground(BLACK);
+	DrawTexture(backGroundTex, 0, 0, WHITE);
+	
+	char score[20];
+	sprintf_s(score, "%d", m_score);
 
+	DrawText(score, 50, 50, 50, GREEN);
+
+	DrawTexture(safeBoxTex, 5.0f * m_tileWidth, 5.0f * m_tileHeight, WHITE);
+
+	DrawTexture(topBottomWallTex, 0.0f * m_tileWidth, 0.0f * m_tileHeight, WHITE);
+	DrawTexture(topBottomWallTex, 0.0f * m_tileWidth, 29.0f * m_tileHeight, WHITE);
+	DrawTexture(sideWallTex, 0.0f * m_tileWidth, 0.0f * m_tileHeight, WHITE);
+	DrawTexture(sideWallTex, 55.0f * m_tileWidth, 0.0f * m_tileHeight, WHITE);
+
+	DrawTexture(wallTex, 15.0f * m_tileWidth, 5.0f * m_tileHeight, WHITE);
+	DrawTexture(wallTex, 25.0f * m_tileWidth, 5.0f * m_tileHeight, WHITE);
+	DrawTexture(wallTex, 35.0f * m_tileWidth, 5.0f * m_tileHeight, WHITE);
+	DrawTexture(wallTex, 45.0f * m_tileWidth, 5.0f * m_tileHeight, WHITE);
+
+	DrawTexture(wallTex, 5.0f * m_tileWidth, 17.0f * m_tileHeight, WHITE);
+	DrawTexture(wallTex, 15.0f * m_tileWidth, 17.0f * m_tileHeight, WHITE);
+	DrawTexture(wallTex, 25.0f * m_tileWidth, 17.0f * m_tileHeight, WHITE);
+	DrawTexture(wallTex, 35.0f * m_tileWidth, 17.0f * m_tileHeight, WHITE);
+	DrawTexture(wallTex, 45.0f * m_tileWidth, 17.0f * m_tileHeight, WHITE);
 
 	for (int y = 0; y < MAP_ROWS; y++)
 	{
@@ -177,17 +307,14 @@ void Application::Draw()
 			int yPos = y * m_tileHeight;
 			int tileID = m_map[y][x];
 
-			if (tileID == WALL)
-			{
-				DrawRectangle(xPos, yPos, m_tileWidth, m_tileHeight, GREEN);
-			}
+
 			if (tileID == FOOD)
 			{
-				DrawCircle(xPos + m_tileWidth / 2, yPos + m_tileHeight / 2, 5, YELLOW);
+				DrawCircle(xPos + m_tileWidth / 2, yPos + m_tileHeight / 2, 6, YELLOW);
 			}
 			if (tileID == POWERUP)
 			{
-				DrawCircle(xPos + m_tileWidth / 2, yPos + m_tileHeight / 2, 8, ORANGE);
+				DrawTexture(VTex, xPos + m_tileWidth / 2 - VTex.width / 2, yPos + m_tileHeight / 2 - VTex.height / 2, WHITE);
 			}
 		}
 	}
@@ -196,9 +323,36 @@ void Application::Draw()
 	//===============================================================================================================
 	m_redGhost->Draw();
 	//===============================================================================================================
+	m_blueGhost->Draw();
+	//===============================================================================================================
 	m_player->Draw();
 	//===============================================================================================================
+
+	if (IsKeyDown(KEY_FIVE))
+	{
+		DrawInfluenceMap();
+	}
+
+	if (gameOver == true)
+	{
+		DrawTexture(backGroundTex, 0, 0, WHITE);
+		DrawText("LOSER!!!", 300, 300, 350, GREEN);
+	}
 	EndDrawing();
 }
 
+void Application::DrawInfluenceMap()
+{
+	for (int y = 0; y < m_influence.size(); y++)
+	{
+		for (int x = 0; x < m_influence[y].size(); x++)
+		{
+			float xPos = x * m_tileWidth;
+			float yPos = y * m_tileHeight;
 
+			auto color = YELLOW;
+			color.a = 255 * ((m_influence[y][x] * 0.5f) + 0.1f);
+			DrawRectangle(xPos, yPos, m_tileWidth, m_tileHeight, color);
+		}
+	}
+}

@@ -21,7 +21,8 @@ protected:
 	float m_targetRadius = 1.0f;
 	float m_time = 0;
 	float m_defaultSpeed = 200;
-	int m_offset = 40;
+	int m_offset = 60;
+
 
 
 private:
