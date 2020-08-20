@@ -41,7 +41,7 @@ void RedGhost::Update(float deltaTime)
 	float distToTarget = Vector2Distance(GetPosition(), m_player->GetPosition());
 	if (distToTarget < m_player->GetCapturedRadius() && m_app->GetPlayer()->GetPowerUpBool() == false)
 	{
-		SetVelocity({ 0, 0 });
+		
 		m_app->gameOver = true;
 		
 	}
@@ -62,6 +62,7 @@ void RedGhost::Update(float deltaTime)
 
 			// get nodes near the player
 			std::vector<Graph2D::Node*> nearbyGoalNodes;
+
 			m_app->GetGraph()->GetNearbyNodes({ 8.0f * 33, 8.0f * 33 }, 40, nearbyGoalNodes);
 			if (!nearbyNodes.empty() && !nearbyGoalNodes.empty())
 			{
@@ -100,6 +101,7 @@ void RedGhost::Update(float deltaTime)
 		// get nodes near the player
 		std::vector<Graph2D::Node*> nearbyGoalNodes;
 		m_app->GetGraph()->GetNearbyNodes(m_app->GetPlayer()->GetPosition(), 40, nearbyGoalNodes);
+
 		if (!nearbyNodes.empty() && !nearbyGoalNodes.empty())
 		{
 			// calculate a path from us to the player

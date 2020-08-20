@@ -33,9 +33,8 @@ KeyBoardBehaviour::~KeyBoardBehaviour()
 void KeyBoardBehaviour::Update(GameObject* obj, float deltaTime)
 {
 
-
+	//collision for keyboard behaviour if inside collision reverse velocity
 	auto& noGo = obj->GetApp()->noGo;
-
 	for (int i = 0; i < 17; i++)
 	{
 		if (obj->GetPosition().x > noGo[i].pos.x && obj->GetPosition().x < noGo[i].pos.x + noGo[i].size.x &&
@@ -48,6 +47,7 @@ void KeyBoardBehaviour::Update(GameObject* obj, float deltaTime)
 		}
 	}
 
+	//if key is down move in direction
 	if (IsKeyDown(m_leftKey)) obj->ApplyForce({ -m_moveForce, 0 });
 	if (IsKeyDown(m_rightKey)) obj->ApplyForce({ m_moveForce, 0 });
 	if (IsKeyDown(m_upKey)) obj->ApplyForce({ 0,  -m_moveForce });

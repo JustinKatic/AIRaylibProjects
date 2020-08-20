@@ -15,6 +15,7 @@ SeekBehaviour::~SeekBehaviour()
 void SeekBehaviour::Update(GameObject* obj, float deltaTime)
 {
 	float distToTarget = Vector2Distance(obj->GetPosition(), m_target);
+	//if entity reached target call on arrive function
 	if (distToTarget < m_targetRadius)
 	{
 		if (m_onArriveFn)
@@ -22,7 +23,7 @@ void SeekBehaviour::Update(GameObject* obj, float deltaTime)
 			m_onArriveFn();
 		}
 	}
-
+	//add force in direction of target
 	Vector2 heading = Vector2Add(obj->GetPosition(), obj->GetVelocity());
 	float headingLen = 400;
 
@@ -37,6 +38,7 @@ void SeekBehaviour::Update(GameObject* obj, float deltaTime)
 
 void SeekBehaviour::Draw(GameObject* obj)
 {
+	//DEBUG DRAW
 	DrawCircle(m_target.x, m_target.y, m_targetRadius, RED);
 	DrawCircle(m_target.x, m_target.y, 4, WHITE);
 }

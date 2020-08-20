@@ -5,12 +5,10 @@
 
 PathFindingBehaviour::PathFindingBehaviour()
 {
-
 }
 
 PathFindingBehaviour::~PathFindingBehaviour()
 {
-
 }
 
 void PathFindingBehaviour::Update(GameObject* obj, float deltaTime)
@@ -20,11 +18,14 @@ void PathFindingBehaviour::Update(GameObject* obj, float deltaTime)
 		return;
 	}
 
+	//if entity reaches target radius remove first element in list 
 	float distToTarget = Vector2Distance(obj->GetPosition(), m_targetNodes[0]);
 	if (distToTarget < m_targetRadius)
 	{
 		m_targetNodes.erase(m_targetNodes.begin());
 	}
+
+	//if list is not empty add force towards first element in list
 	if (m_targetNodes.empty() == false)
 	{
 		Vector2 heading = Vector2Add(obj->GetPosition(), obj->GetVelocity());
@@ -37,6 +38,7 @@ void PathFindingBehaviour::Update(GameObject* obj, float deltaTime)
 
 		obj->ApplyForce(forceDir);
 	}
+	//if list is empty call on arrive function
 	else
 	{
 		if (m_onArriveFunc)
@@ -46,6 +48,7 @@ void PathFindingBehaviour::Update(GameObject* obj, float deltaTime)
 
 void PathFindingBehaviour::Draw(GameObject* obj)
 {
+	//DEBUG DRAWING
 	if (m_targetNodes.empty() == false && IsKeyDown(KEY_FIVE))
 	{
 		DrawCircle(m_targetNodes[0].x, m_targetNodes[0].y, m_targetRadius, {255,0,0,100});

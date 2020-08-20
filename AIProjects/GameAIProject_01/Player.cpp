@@ -11,8 +11,7 @@ Player::Player(Application* app) : GameObject(app)
 {
 	m_kbBehaviour = new KeyBoardBehaviour();
 	SetEnterRadius(300);
-	SetCapturedRadius(45);
-
+	SetCapturedRadius(80);
 
 	SetBehaviour(m_kbBehaviour);
 
@@ -36,7 +35,6 @@ void Player::Update(float deltaTime)
 {
 	if (GetPowerUpBool() == true)
 	{
-
 		m_powerUpTimer += deltaTime;
 		if (m_powerUpTimer >= 15)
 		{

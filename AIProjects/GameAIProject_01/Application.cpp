@@ -47,6 +47,8 @@ void Application::Run()
 void Application::Load()
 {
 	//===============================================================================================================
+	//LOADING TEXTURES
+	//===============================================================================================================
 	backGroundImg = LoadImage("../pacManSprites/space.png");
 	backGroundTex = LoadTextureFromImage(backGroundImg);
 
@@ -68,6 +70,9 @@ void Application::Load()
 	VImg = LoadImage("../pacManSprites/V.png");
 	VTex = LoadTextureFromImage(VImg);
 
+	//===============================================================================================================
+	//SETTING COLLISION BOXES
+	//===============================================================================================================
 	noGo = std::vector<Rect>({
 
 		//safeZoneBox
@@ -100,8 +105,11 @@ void Application::Load()
 		//topleft box for player
 		{ {5.0f * m_tileWidth, 5.0f * m_tileHeight}, { 6.0f * m_tileWidth, 8.0f * m_tileHeight }},
 
-	});
+		});
 
+	//===============================================================================================================
+	//creating influence map and populating each element with 0
+	//===============================================================================================================
 	for (int y = 0; y < MAP_ROWS; y++)
 	{
 		m_influence.push_back(std::vector<float>()); // add a row
@@ -110,13 +118,17 @@ void Application::Load()
 			m_influence[y].push_back(0); // add value to row
 		}
 	}
-
+	//===============================================================================================================
+	//creating instance of graph
+	//===============================================================================================================
 	m_graph = new Graph2D();
-	m_graph->SetInfluenceMap(&m_influence,m_tileWidth,m_tileHeight);
+	m_graph->SetInfluenceMap(&m_influence, m_tileWidth, m_tileHeight);
 	m_graphEditor = new Graph2DEditor();
 	m_graphEditor->SetGraph(m_graph);
 
-
+	//===============================================================================================================
+	//creating instance of game objects
+	//===============================================================================================================
 	auto player = new Player(this);
 	player->SetFriction(1.0f);
 	m_player = player;
@@ -132,6 +144,9 @@ void Application::Load()
 	blueGhost->SetPlayer(player);
 	m_blueGhost = blueGhost;
 
+	//===============================================================================================================
+	//setting postions for gameObjects and nodes inside of tile map
+	//===============================================================================================================
 
 	for (int y = 0; y < MAP_ROWS; y++)
 	{
@@ -145,7 +160,7 @@ void Application::Load()
 			{
 				player->SetPosition({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
 			}
-			if (tileID == FOOD || tileID == START || tileID == POWERUP || tileID == REDGHOST || tileID == BLUEGHOST || tileID == SAFEPATH || tileID == SAFEENTRY  || tileID == SAFEENTRYDOOR)
+			if (tileID == FOOD || tileID == START || tileID == POWERUP || tileID == REDGHOST || tileID == BLUEGHOST || tileID == SAFEPATH || tileID == SAFEENTRY || tileID == SAFEENTRYDOOR)
 			{
 				m_graph->AddNode({ (float)xPos + m_tileWidth / 2,(float)yPos + m_tileHeight / 2 });
 			}
@@ -159,6 +174,10 @@ void Application::Load()
 			}
 		}
 	}
+
+	//===============================================================================================================
+	//setting connections between nodes and adding there data
+	//===============================================================================================================
 	for (auto node : m_graph->GetNodes())
 	{
 		std::vector<Graph2D::Node*> nearbyNodes;
@@ -177,8 +196,9 @@ void Application::Load()
 	}
 }
 
-
-
+//===============================================================================================================
+//UNLOADING NEW CREATED INSTANCES
+//===============================================================================================================
 void Application::Unload()
 {
 	delete m_player;
@@ -206,17 +226,18 @@ void Application::Update(float dt)
 {
 	m_player->Update(dt);
 	//===============================================================================================================
-	 m_redGhost->Update(dt);
+	m_redGhost->Update(dt);
 	//===============================================================================================================
-	 m_blueGhost->Update(dt);
+	m_blueGhost->Update(dt);
 	//===============================================================================================================
 	m_graphEditor->Update(dt);
 	//===============================================================================================================
 
-	   // what tile index is pacman on?
+	 // what tile index is pacman on?
 	int currentIndexX = (m_player->GetPosition().x) / m_tileWidth;
 	int currentIndexY = (m_player->GetPosition().y) / m_tileHeight;
-
+	
+	//if pacman is on specified index do following
 	if (m_map[currentIndexY][currentIndexX] == FOOD)
 	{
 		m_score += 1;
@@ -228,6 +249,10 @@ void Application::Update(float dt)
 		m_map[currentIndexY][currentIndexX] = EMPTY;
 	}
 }
+
+//===============================================================================================================
+//updating influence map
+//===============================================================================================================
 void Application::UpdateInfluence(float deltaTime)
 {
 	// what tile index is pacman on?
@@ -240,11 +265,10 @@ void Application::UpdateInfluence(float deltaTime)
 	int R = currentIndexX + 2;
 
 	T = (T < 0) ? 0 : T;
-	B = (B > MAP_ROWS-1) ? MAP_ROWS-1 : B;
+	B = (B > MAP_ROWS - 1) ? MAP_ROWS - 1 : B;
 	L = (L < 0) ? 0 : L;
-	R = (R > MAP_COLS-1) ? MAP_COLS-1 : R;
+	R = (R > MAP_COLS - 1) ? MAP_COLS - 1 : R;
 
-	
 	for (int y = T; y <= B; y++)
 	{
 		for (int x = L; x <= R; x++)
@@ -275,12 +299,15 @@ void Application::Draw()
 	BeginDrawing();
 	ClearBackground(BLACK);
 	DrawTexture(backGroundTex, 0, 0, WHITE);
-	
+
 	char score[20];
 	sprintf_s(score, "%d", m_score);
 
 	DrawText(score, 50, 50, 50, GREEN);
 
+	//===============================================================================================================
+	// drawing sprites textures
+	//===============================================================================================================
 	DrawTexture(safeBoxTex, 5.0f * m_tileWidth, 5.0f * m_tileHeight, WHITE);
 
 	DrawTexture(topBottomWallTex, 0.0f * m_tileWidth, 0.0f * m_tileHeight, WHITE);
@@ -299,6 +326,9 @@ void Application::Draw()
 	DrawTexture(wallTex, 35.0f * m_tileWidth, 17.0f * m_tileHeight, WHITE);
 	DrawTexture(wallTex, 45.0f * m_tileWidth, 17.0f * m_tileHeight, WHITE);
 
+	//===============================================================================================================
+	//Drawing sprites at specfied position in tile map
+	//===============================================================================================================
 	for (int y = 0; y < MAP_ROWS; y++)
 	{
 		for (size_t x = 0; x < MAP_COLS; x++)
@@ -306,7 +336,6 @@ void Application::Draw()
 			int xPos = x * m_tileWidth;
 			int yPos = y * m_tileHeight;
 			int tileID = m_map[y][x];
-
 
 			if (tileID == FOOD)
 			{
@@ -328,11 +357,13 @@ void Application::Draw()
 	m_player->Draw();
 	//===============================================================================================================
 
+	//debug drawing of infuence map
 	if (IsKeyDown(KEY_FIVE))
 	{
 		DrawInfluenceMap();
 	}
 
+	//gameover screen
 	if (gameOver == true)
 	{
 		DrawTexture(backGroundTex, 0, 0, WHITE);
@@ -341,6 +372,9 @@ void Application::Draw()
 	EndDrawing();
 }
 
+//===============================================================================================================
+//drawing heatmap
+//===============================================================================================================
 void Application::DrawInfluenceMap()
 {
 	for (int y = 0; y < m_influence.size(); y++)

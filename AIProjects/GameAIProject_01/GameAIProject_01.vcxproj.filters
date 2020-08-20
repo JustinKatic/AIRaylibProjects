@@ -25,6 +25,12 @@
     <Filter Include="Source Files\GraphNodes.cpp">
       <UniqueIdentifier>{0e88493e-bbfc-4517-8ff9-6a7f90fa059a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects.cpp">
+      <UniqueIdentifier>{4c8e6a6b-0b56-4bbe-bf4e-839c07fe0c49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Obejcts.h">
+      <UniqueIdentifier>{16070b1b-9f84-4506-b959-a63970efdc75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -32,15 +38,6 @@
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Behaviour.cpp">
-      <Filter>Source Files\Behaviours.cpp</Filter>
     </ClCompile>
     <ClCompile Include="FleeBehaviour.cpp">
       <Filter>Source Files\Behaviours.cpp</Filter>
@@ -63,21 +60,24 @@
     <ClCompile Include="Graph2DEditor.cpp">
       <Filter>Source Files\GraphNodes.cpp</Filter>
     </ClCompile>
-    <ClCompile Include="RedGhost.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BlueGhost.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Objects.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Objects.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="RedGhost.cpp">
+      <Filter>Source Files\Objects.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Objects.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Behaviour.cpp">
+      <Filter>Source Files\Behaviours.cpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Behaviour.h">
@@ -107,11 +107,17 @@
     <ClInclude Include="Graph2DEditor.h">
       <Filter>Header Files\GraphNodes.h</Filter>
     </ClInclude>
-    <ClInclude Include="RedGhost.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="BlueGhost.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Obejcts.h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Obejcts.h</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Obejcts.h</Filter>
+    </ClInclude>
+    <ClInclude Include="RedGhost.h">
+      <Filter>Header Files\Obejcts.h</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

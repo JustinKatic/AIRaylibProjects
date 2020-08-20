@@ -105,6 +105,7 @@ void Graph2DEditor::Update(float deltaTime)
 
 void Graph2DEditor::Draw()
 {
+	//DEBUG DRAWING
 	if (IsKeyDown(KEY_FIVE))
 	{
 		//draw all connections

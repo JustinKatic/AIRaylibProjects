@@ -192,18 +192,18 @@ bool Graph2D::FindPath(Node* startNode, Node* goalNode, std::list<Node*>& out_pa
 		//for each edge in current nodes connections
 		for (Edge& edge : currentNode->graphNode->connections)
 		{
-
-			//checks if current nodes connection is in stack list or stack list
+			//if user influence bool set to false use *0 else *1
 			float influenceMultiplier = useInfluence ? 1.0f : 0.0f;
+			//get influence map data 
 			float influenceCost = influenceMultiplier * GetInfluenceValueAtPos(edge.to->data.x, edge.to->data.y) * 1000;
 
 			auto pFNodeChild = GetNodeInLists(edge.to);
 
-
+			//add edge.data to gscore and also add influence cost from heat map
 			float gScore = currentNode->gScore + edge.data + influenceCost;
 
-			// TODO: optimise this. // Distance Squared from node to goalNode.
-			float hScore = Vector2Distance(edge.to->data, goalNode->data); // *Vector2Distance(edge.to->data, goalNode->data);
+			//haristic score... guess score based of distance to goalnode
+			float hScore = Vector2Distance(edge.to->data, goalNode->data); 
 
 			// Final Score.
 			float fScore = gScore + hScore;
