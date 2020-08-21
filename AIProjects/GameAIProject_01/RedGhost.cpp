@@ -41,9 +41,7 @@ void RedGhost::Update(float deltaTime)
 	float distToTarget = Vector2Distance(GetPosition(), m_player->GetPosition());
 	if (distToTarget < m_player->GetCapturedRadius() && m_app->GetPlayer()->GetPowerUpBool() == false)
 	{
-		
 		m_app->gameOver = true;
-		
 	}
 	else if (distToTarget < m_player->GetCapturedRadius() && m_app->GetPlayer()->GetPowerUpBool() == true)
 	{
